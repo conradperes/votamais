@@ -1,0 +1,39 @@
+<html>
+<head>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js" ></script>
+</head>
+<body>
+<h3>VotaMais - Escolha o presidente do Brasil</h3>
+<div id="votePanel">
+	<input type="radio" name="candidate" value="James">James<br>
+	<input type="radio" name="candidate" value="Dennis">Dennis<br>
+	<input type="radio" name="candidate" value="Ada">Ada<br>
+	<input type="radio" name="candidate" value="Martin">Martin<br><br>
+	<input type="button" id="vote" value="Votar" />
+</div>
+<div id="votingPanel">
+	<h4>Votando...</h4>
+</div>
+<div id="resultPanel">
+	<ul id="resultList">
+	</ul>
+</div>
+<script>
+$("#votingPanel").hide();
+$("#resultPanel").hide();
+$("#vote").click(function() {
+	$("#votePanel").hide();
+	$("#votingPanel").show();
+	$.post("/votamais/api/vote?candidate=" + $("input:checked").val(), function() {
+		$.get("/votamais/api/vote", function(result) {
+			result.forEach(function(candidate) {
+				$("#resultList").append("<li>" + candidate.name + " (" + candidate.votes + " votos)</li>")
+			});
+			$("#votingPanel").hide();
+			$("#resultPanel").show();
+		})
+	});
+});
+</script>
+</body>
+</html>
